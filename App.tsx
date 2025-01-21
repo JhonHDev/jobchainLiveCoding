@@ -1,118 +1,100 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
+  Dimensions,
+  Image,
+  Pressable,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TextInput,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+const App = () => {
+  const [value, setValue] = useState('');
+  const [isOnFocus, setIsOnFocus] = useState(false);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <View
+        style={[
+          styles.inputContainer,
+          isOnFocus && {borderWidth: 3, borderColor: '#7D77FF'},
+        ]}>
+        <TextInput
+          value={value}
+          onChangeText={setValue}
+          style={[styles.input, isOnFocus && {top: 20}]}
+          onFocus={() => setIsOnFocus(true)}
+          onBlur={() => setIsOnFocus(false)}
+        />
+
+        <Text
+          style={[
+            styles.inputText,
+            isOnFocus && styles.inputTextFocus,
+            !isOnFocus && value.trim().length > 0 && {color: 'transparent'},
+          ]}>
+          {isOnFocus ? 'Correo electrónico' : 'Escribe tu correo electrónico'}
+        </Text>
+
+        {isOnFocus && (
+          <Pressable
+            onPress={() => setIsOnFocus(false)}
+            style={styles.closeButton}>
+            <Image
+              source={require('./assets/close-icon.png')}
+              width={25}
+              height={25}
+            />
+          </Pressable>
+        )}
+      </View>
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputContainer: {
+    width: Dimensions.get('screen').width * 0.8,
+    height: 60,
+    borderWidth: 1,
+    borderColor: '#1D1C47',
+    backgroundColor: '#141534',
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  input: {
+    position: 'absolute',
+    width: '100%',
+    paddingVertical: 8,
+    marginHorizontal: 20,
+    color: '#FFF',
+    zIndex: 50,
+    fontSize: 18,
+  },
+  inputText: {
+    color: '#7876B1',
+    left: 0,
+    fontSize: 18,
+    fontWeight: 500,
+  },
+  closeButton: {
+    zIndex: 50,
+  },
+  inputTextFocus: {
+    fontSize: 10,
+    top: -12,
+    color: '#7D77FF',
+  },
+});
